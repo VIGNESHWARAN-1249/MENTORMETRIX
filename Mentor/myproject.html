@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CineSearch - Movie Search</title>
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0f1117;
+    color: white;
+}
+
+
+/* ================= HEADER ================= */
+
+header {
+    height: 70px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 7%;
+
+    background: #151821;
+
+    border-bottom: 1px solid #272b35;
+}
+
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+nav {
+    display: flex;
+    gap: 30px;
+}
+
+
+nav a {
+    color: #ddd;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    transition: 0.3s;
+}
+
+
+nav a:hover {
+    color: #ff3d71;
+}
+
+
+/* ================= HERO ================= */
+
+.hero {
+
+    min-height: 430px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    background:
+        linear-gradient(
+            rgba(15,17,23,0.85),
+            rgba(15,17,23,0.95)
+        );
+}
+
+
+.hero-content {
+    max-width: 750px;
+}
+
+
+.hero h1 {
+
+    font-size: 48px;
+
+    margin-bottom: 20px;
+}
+
+
+.hero p {
+
+    color: #aaa;
+
+    font-size: 18px;
+
+    margin-bottom: 35px;
+
+    line-height: 1.6;
+}
+
+
+/* ================= SEARCH ================= */
+
+.search-box {
+
+    display: flex;
+
+    max-width: 650px;
+
+    margin: auto;
+
+    background: #1c2029;
+
+    border-radius: 8px;
+
+    padding: 5px;
+
+}
+
+
+.search-box input {
+
+    flex: 1;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    padding: 15px;
+
+    font-size: 16px;
+}
+
+
+.search-box input::placeholder {
+
+    color: #777;
+}
+
+
+.search-box button {
+
+    border: none;
+
+    background: #ff3d71;
+
+    color: white;
+
+    padding: 0 25px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition: 0.3s;
+}
+
+
+.search-box button:hover {
+
+    background: #ff205b;
+}
+
+
+/* ================= MOVIES ================= */
+
+main {
+
+    padding: 50px 7%;
+
+    min-height: 400px;
+}
+
+
+.section-title {
+
+    margin-bottom: 30px;
+}
+
+
+.section-title h2 {
+
+    font-size: 28px;
+}
+
+
+.movie-container {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(190px, 1fr));
+
+    gap: 25px;
+}
+
+
+/* ================= MOVIE CARD ================= */
+
+.movie-card {
+
+    background: #181b23;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    transition: 0.3s;
+
+    border: 1px solid #252936;
+}
+
+
+.movie-card:hover {
+
+    transform: translateY(-6px);
+
+    border-color: #ff3d71;
+}
+
+
+.movie-card img {
+
+    width: 100%;
+
+    height: 280px;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+.movie-info {
+
+    padding: 15px;
+}
+
+
+.movie-info h3 {
+
+    font-size: 17px;
+
+    margin-bottom: 8px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.movie-info p {
+
+    color: #999;
+
+    margin-bottom: 15px;
+}
+
+
+.details-btn {
+
+    width: 100%;
+
+    border: none;
+
+    background: #292e3a;
+
+    color: white;
+
+    padding: 10px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.details-btn:hover {
+
+    background: #ff3d71;
+}
+
+
+/* ================= LOADING ================= */
+
+.loading {
+
+    display: none;
+
+    text-align: center;
+
+    color: #aaa;
+
+    margin: 30px;
+}
+
+
+/* ================= ERROR ================= */
+
+.error {
+
+    text-align: center;
+
+    color: #ff6b6b;
+
+    margin-bottom: 25px;
+}
+
+
+/* ================= MODAL ================= */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    left: 0;
+
+    top: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: rgba(0,0,0,0.8);
+
+    padding: 30px;
+
+    overflow-y: auto;
+}
+
+
+.modal-content {
+
+    position: relative;
+
+    max-width: 850px;
+
+    margin: 50px auto;
+
+    background: #181b23;
+
+    border-radius: 10px;
+
+    padding: 30px;
+}
+
+
+.close-btn {
+
+    position: absolute;
+
+    right: 20px;
+
+    top: 15px;
+
+    border: none;
+
+    background: none;
+
+    color: white;
+
+    font-size: 30px;
+
+    cursor: pointer;
+}
+
+
+.details {
+
+    display: flex;
+
+    gap: 30px;
+}
+
+
+.details img {
+
+    width: 250px;
+
+    max-height: 370px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+
+.details-info {
+
+    flex: 1;
+}
+
+
+.details-info h2 {
+
+    font-size: 30px;
+
+    margin-bottom: 15px;
+}
+
+
+.details-info p {
+
+    color: #bbb;
+
+    line-height: 1.6;
+
+    margin-bottom: 10px;
+}
+
+
+.rating {
+
+    color: #ffd166;
+
+    font-weight: bold;
+}
+
+
+/* ================= ABOUT ================= */
+
+.about {
+
+    padding: 70px 7%;
+
+    background: #151821;
+
+    text-align: center;
+}
+
+
+.about h2 {
+
+    margin-bottom: 15px;
+}
+
+
+.about p {
+
+    max-width: 650px;
+
+    margin: auto;
+
+    color: #999;
+
+    line-height: 1.7;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+
+    padding: 25px;
+
+    text-align: center;
+
+    background: #0b0d12;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 700px) {
+
+    header {
+
+        padding: 0 20px;
+    }
+
+
+    nav {
+
+        gap: 12px;
+    }
+
+
+    nav a {
+
+        font-size: 13px;
+    }
+
+
+    .hero h1 {
+
+        font-size: 34px;
+    }
+
+
+    .hero p {
+
+        font-size: 16px;
+    }
+
+
+    .search-box {
+
+        flex-direction: column;
+
+        background: transparent;
+
+        gap: 10px;
+    }
+
+
+    .search-box input {
+
+        background: #1c2029;
+
+        border-radius: 6px;
+    }
+
+
+    .search-box button {
+
+        padding: 14px;
+    }
+
+
+    .details {
+
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+
+    .details img {
+
+        width: 200px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+    <script>
+       const API_KEY = "6f785afc";
+const BASE_URL = "https://www.omdbapi.com/";
+
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const movieContainer = document.getElementById("movieContainer");
+const loading = document.getElementById("loading");
+const error = document.getElementById("error");
+
+const movieModal = document.getElementById("movieModal");
+const closeModal = document.getElementById("closeModal");
+const movieDetails = document.getElementById("movieDetails");
+
+
+// SEARCH BUTTON
+searchBtn.addEventListener("click", searchMovies);
+
+
+// ENTER KEY
+searchInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        searchMovies();
+    }
+});
+
+
+// SEARCH MOVIES
+async function searchMovies() {
+
+    const movieName = searchInput.value.trim();
+
+    if (movieName === "") {
+        error.textContent = "Please enter a movie name.";
+        movieContainer.innerHTML = "";
+        return;
+    }
+
+    error.textContent = "";
+    movieContainer.innerHTML = "";
+    loading.style.display = "block";
+
+    try {
+
+        const url =
+            `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(movieName)}`;
+
+        console.log("API URL:", url);
+
+        const response = await fetch(url);
+
+        const data = await response.json();
+
+        console.log("API Response:", data);
+
+        if (data.Response === "False") {
+            error.textContent = data.Error;
+            return;
+        }
+
+        displayMovies(data.Search);
+
+    } catch (err) {
+
+        console.error("ERROR:", err);
+
+        error.textContent =
+            "Something went wrong while fetching movies.";
+
+    } finally {
+
+        loading.style.display = "none";
+
+    }
+}
+
+
+// DISPLAY MOVIES
+function displayMovies(movies) {
+
+    movieContainer.innerHTML = "";
+
+    movies.forEach(movie => {
+
+        const card = document.createElement("div");
+
+        card.className = "movie-card";
+
+        const poster =
+            movie.Poster !== "N/A"
+                ? movie.Poster
+                : "https://via.placeholder.com/300x450?text=No+Poster";
+
+        card.innerHTML = `
+            
+            <img src="${poster}" alt="${movie.Title}">
+
+            <div class="movie-info">
+
+                <h3>${movie.Title}</h3>
+
+                <p>${movie.Year} • ${movie.Type}</p>
+
+                <button class="details-btn"
+                    onclick="getMovieDetails('${movie.imdbID}')">
+                    View Details
+                </button>
+
+            </div>
+
+        `;
+
+        movieContainer.appendChild(card);
+
+    });
+}
+
+
+// GET MOVIE DETAILS
+async function getMovieDetails(imdbID) {
+
+    try {
+
+        const url =
+            `${BASE_URL}?apikey=${API_KEY}&i=${imdbID}&plot=full`;
+
+        const response = await fetch(url);
+
+        const movie = await response.json();
+
+        if (movie.Response === "False") {
+            error.textContent = movie.Error;
+            return;
+        }
+
+        showMovieDetails(movie);
+
+    } catch (err) {
+
+        console.error(err);
+
+        error.textContent =
+            "Unable to load movie details.";
+
+    }
+}
+
+
+// SHOW DETAILS
+function showMovieDetails(movie) {
+
+    const poster =
+        movie.Poster !== "N/A"
+            ? movie.Poster
+            : "https://via.placeholder.com/300x450?text=No+Poster";
+
+    movieDetails.innerHTML = `
+
+        <div class="details">
+
+            <img src="${poster}" alt="${movie.Title}">
+
+            <div class="details-info">
+
+                <h2>${movie.Title}</h2>
+
+                <p><strong>Year:</strong> ${movie.Year}</p>
+
+                <p><strong>Released:</strong> ${movie.Released}</p>
+
+                <p><strong>Runtime:</strong> ${movie.Runtime}</p>
+
+                <p><strong>Genre:</strong> ${movie.Genre}</p>
+
+                <p><strong>Director:</strong> ${movie.Director}</p>
+
+                <p><strong>Actors:</strong> ${movie.Actors}</p>
+
+                <p><strong>Language:</strong> ${movie.Language}</p>
+
+                <p><strong>Country:</strong> ${movie.Country}</p>
+
+                <p><strong>IMDb Rating:</strong> ⭐ ${movie.imdbRating}</p>
+
+                <p><strong>Plot:</strong> ${movie.Plot}</p>
+
+            </div>
+
+        </div>
+
+    `;
+
+    movieModal.style.display = "block";
+}
+
+
+// CLOSE MODAL
+closeModal.addEventListener("click", function () {
+
+    movieModal.style.display = "none";
+
+});
+
+
+window.addEventListener("click", function (event) {
+
+    if (event.target === movieModal) {
+        movieModal.style.display = "none";
+    }
+
+});
+
+
+document.addEventListener("keydown", function (event) {
+
+    if (event.key === "Escape") {
+        movieModal.style.display = "none";
+    }
+
+});
+    </script>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">🎬 CineSearch</div>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#movies">Movies</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+            <h1>Find Your Next Movie</h1>
+
+            <p>
+                Search for movies and explore their details,
+                ratings, actors and more.
+            </p>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search for a movie..."
+                >
+
+                <button id="searchBtn">
+                    Search
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Movies Section -->
+    <main id="movies">
+
+        <div class="section-title">
+            <h2>Movie Results</h2>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            Searching movies...
+        </div>
+
+        <!-- Error -->
+        <div id="error" class="error"></div>
+
+        <!-- Movie Cards -->
+        <div id="movieContainer" class="movie-container"></div>
+
+    </main>
+
+
+    <!-- Movie Details Modal -->
+
+    <div id="movieModal" class="modal">
+
+        <div class="modal-content">
+
+            <button id="closeModal" class="close-btn">
+                ×
+            </button>
+
+            <div id="movieDetails"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- About Section -->
+
+    <section id="about" class="about">
+
+        <h2>About CineSearch</h2>
+
+        <p>
+            CineSearch is a simple movie discovery website
+            built using HTML, CSS and JavaScript.
+            Movie information is retrieved using the OMDb API.
+        </p>
+
+    </section>
+
+
+    <footer>
+
+        <p>
+            © 2026 CineSearch | Built with HTML, CSS & JavaScript
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
